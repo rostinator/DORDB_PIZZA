@@ -1,0 +1,44 @@
+-- Triviální IO
+
+-- Telefonní číslo zákazníka se musí skládat pouze z číselných znaků
+ALTER TABLE customer ADD CONSTRAINT customer_phone_ck CHECK ( REGEXP_LIKE ( PHONE, '[0-9]' ) );
+
+-- Cena objednávek a jednotlivých pizz je kladné reálné číslo
+ALTER TABLE orders ADD CONSTRAINT orders_price_ck CHECK ( PRICE > 0 );
+ALTER TABLE pizza ADD CONSTRAINT pizza_price_ck CHECK ( PRICE > 0 );
+
+-- PSČ se skladá pouze z číselných znaků
+ALTER TABLE address ADD CONSTRAINT address_postal_code_ck CHECK ( REGEXP_LIKE ( POSTAL_CODE, '[0-9]' ) );
+
+-- Datum vytvoření objednávky je dřívější než datum aktualizace a předpokádaného doručení
+ALTER TABLE orders ADD CONSTRAINT orders_date_ck CHECK ( (CREATED < UPDATED AND CREATED < ESTIMATED_DELIVERY) );
+
+-- Datum vytvoření pizzy je dřívější než datum aktualizace
+ALTER TABLE pizza ADD CONSTRAINT pizza_date_ck CHECK ( CREATED < UPDATED );
+
+-- Množství jednotlivých položek objednávky je kladné číslo
+ALTER TABLE pizza_order ADD CONSTRAINT pizza_order_amount_ck CHECK ( AMOUNT > 0 );
+
+-- Email zákazníka musí být unikatní
+CREATE UNIQUE INDEX customer__idx ON customer ( userz_id ASC );
+
+
+-- Netriviální IO
+
+
+-- Nelze vytvořit položku objednávky pokud je pizza neaktivní
+CREATE OR REPLACE TRIGGER create_order_item_tr BEFORE
+    INSERT ON pizza_order
+    FOR EACH ROW
+DECLARE
+    is_active NUMBER;
+BEGIN
+    SELECT TO_NUMBER(p.active)
+    INTO is_active
+    FROM pizza p
+    WHERE p.id = :new.pizza_id;
+
+    IF is_active = 0 THEN
+        raise_application_error(-20001, 'Nelze pridat do objednavky neaktivní polozku.');
+    END IF;
+END;
