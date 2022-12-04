@@ -1,0 +1,99 @@
+-- pomocné datové type pro položky objednávky
+create or replace type item_typ as object(pizza_id integer, amount integer);
+create or replace type order_items as table of item_typ;
+
+CREATE OR REPLACE PACKAGE pizza_orders_api AS
+    PROCEDURE create_order (
+        p_customer_id INTEGER,
+        p_address_id  INTEGER,
+        p_first_name  customer.first_name%TYPE,
+        p_last_name   customer.last_name%TYPE,
+        p_email       customer.email%TYPE,
+        p_phone       customer.phone%TYPE,
+        p_postal_code address.postal_code%TYPE,
+        p_city        address.city%TYPE,
+        p_street      address.street%TYPE,
+        p_items       IN order_items
+    );
+    
+    function calculate_order_price(order_id integer) return number;
+
+END;
+/
+CREATE OR REPLACE PACKAGE BODY pizza_orders_api AS
+
+    PROCEDURE create_order (
+        p_customer_id INTEGER,
+        p_address_id  INTEGER,
+        p_first_name  customer.first_name%TYPE,
+        p_last_name   customer.last_name%TYPE,
+        p_email       customer.email%TYPE,
+        p_phone       customer.phone%TYPE,
+        p_postal_code address.postal_code%TYPE,
+        p_city        address.city%TYPE,
+        p_street      address.street%TYPE,
+        p_items       IN order_items
+    ) IS
+        customer_id INTEGER;
+        address_id  INTEGER;
+        order_id    INTEGER;
+    BEGIN
+        IF p_customer_id IS NULL THEN
+            customer_id := customer_seq.nextval;
+            INSERT INTO customer (id, first_name, last_name, email, phone) VALUES (customer_id, p_first_name, p_last_name, p_email, p_phone);
+        ELSE
+            customer_id := p_customer_id;
+        END IF;
+
+        IF p_address_id IS NULL THEN
+            address_id := address_seq.nextval;
+            INSERT INTO address (id, postal_code, city, street) VALUES (address_id, p_postal_code, p_city, p_street);
+        ELSE
+            address_id := p_address_id;
+        END IF;
+
+        order_id := order_seq.nextval;
+        INSERT INTO orders (id, price, status, customer_id, address_id) VALUES (order_id, 0, 'CREATED', customer_id, address_id);
+        
+        FOR i IN p_items.first..p_items.last LOOP
+            INSERT INTO pizza_order (pizza_id, orders_id, amount) VALUES (p_items(i).pizza_id, order_id, p_items(i).amount);
+        END LOOP;
+        
+        update orders
+        set price = calculate_order_price(order_id)
+        where id = order_id;
+        
+    END;
+    
+    FUNCTION calculate_order_price(order_id INTEGER) RETURN NUMBER
+    IS
+        order_price NUMBER;
+    BEGIN
+        SELECT SUM(po.amount * p.price)
+        INTO order_price
+        FROM pizza_order po
+        JOIN pizza p ON po.pizza_id = p.id
+        WHERE po.orders_id = order_id;
+
+        RETURN order_price;
+        EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            raise_application_error(-20010, 'Nelze vytvorit objednavku bez polozek');
+    END;
+
+END;
+
+
+
+
+
+
+declare
+    items ORDER_ITEMS := ORDER_ITEMS();
+begin 
+    items.EXTEND(2);
+    items(1) := ITEM_TYP(22 ,1);
+    items(2) := ITEM_TYP(23 ,2);
+    
+    PIZZA_ORDERS_API.create_order(null, null, 'Karel', 'Novak', 'karel@seznam.cz', '123456789', '12345', 'Brno', 'Nova 1232', items);
+end;

@@ -78,15 +78,23 @@
 
     <h3>2.1. Netriviální integritní omezení</h3>
     <ul>
-      <li>Pouze uživatel s rolí "Customer" má vytvořeného zákazníka</li>
       <li>Každá aktualně nabízená pizza se skládá z alespoň jedné ingredience</li>
       <li>Nelze vytvořit položku objednávky pokud je pizza neaktivní</li>
-      <li></li>
     </ul>
 
-
     <h2>3. Slovní návrh API rozhraní „business logiky“</h2>
-
+    <p>
+      <strong>Název: </strong>createOrder<br>
+      <strong>Parametry: </strong> customerId, addressId, firstName, lastName, email, phone, postalCode, city, street,
+      items.<br>
+      <strong>Popis:</strong> procedura vytvoří novou objednávku a sváže jí s adresou a zákazníkem. Dle jednotlivých
+      položek vypočítá celkovou cenu objednávky.
+    </p>
+    <p>
+      <strong>Název:</strong> createOrder <br>
+      <strong>Parametry:</strong> <br>
+      <strong>Popis:</strong>
+    </p>
 
     <h2>4. Pět slovně formulovaných dotazů nad schématem</h2>
 
