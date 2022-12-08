@@ -88,6 +88,11 @@ CREATE UNIQUE INDEX userz__idx ON
         customer_id
     ASC );
 
+CREATE UNIQUE INDEX userz2__idx ON
+    userz (
+        username
+    ASC );
+
 ALTER TABLE userz ADD CONSTRAINT userz_pk PRIMARY KEY ( id );
 
 ALTER TABLE customer
