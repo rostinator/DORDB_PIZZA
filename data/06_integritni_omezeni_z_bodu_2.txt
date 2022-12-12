@@ -19,9 +19,6 @@ ALTER TABLE pizza ADD CONSTRAINT pizza_date_ck CHECK ( CREATED < UPDATED );
 -- Množství jednotlivých položek objednávky je kladné číslo
 ALTER TABLE pizza_order ADD CONSTRAINT pizza_order_amount_ck CHECK ( AMOUNT > 0 );
 
--- Email zákazníka musí být unikatní
-CREATE UNIQUE INDEX customer__idx ON customer ( userz_id ASC );
-
 
 -- Netriviální IO
 
@@ -78,7 +75,7 @@ CREATE OR REPLACE PROCEDURE check_pizza_ingredient (
 BEGIN
     CASE
         WHEN deleting THEN
-            IF calculate_active_ingredients(p_pizza_id) <= 1 THEN
+            IF calculate_active_ingredients(p_pizza_id) < 1 THEN
                 UPDATE pizza
                 SET
                     active = '0'
@@ -90,7 +87,7 @@ BEGIN
     END CASE;
 END;
 /
-CREATE OR REPLACE TRIGGER check_pizza_ingredient_tr BEFORE
+CREATE OR REPLACE TRIGGER check_pizza_ingredient_tr after
     DELETE OR UPDATE ON pizza_ingredient
     FOR EACH ROW
 BEGIN

@@ -13,13 +13,7 @@ CREATE TABLE customer (
     last_name   VARCHAR2(50) NOT NULL,
     email       VARCHAR2(255) NOT NULL,
     phone       VARCHAR2(9) NOT NULL,
-    userz_id    INTEGER
 );
-
-CREATE UNIQUE INDEX customer__idx ON
-    customer (
-        userz_id
-    ASC );
 
 ALTER TABLE customer ADD CONSTRAINT customer_pk PRIMARY KEY ( id );
 
@@ -88,16 +82,9 @@ CREATE UNIQUE INDEX userz__idx ON
         customer_id
     ASC );
 
-CREATE UNIQUE INDEX userz2__idx ON
-    userz (
-        username
-    ASC );
+ALTER TABLE userz ADD CONSTRAINT user_usrname_un UNIQUE ( username );
 
 ALTER TABLE userz ADD CONSTRAINT userz_pk PRIMARY KEY ( id );
-
-ALTER TABLE customer
-    ADD CONSTRAINT customer_userz_fk FOREIGN KEY ( userz_id )
-        REFERENCES userz ( id );
 
 ALTER TABLE orders
     ADD CONSTRAINT orders_address_fk FOREIGN KEY ( address_id )

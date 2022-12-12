@@ -52,8 +52,8 @@ CREATE OR REPLACE PACKAGE BODY pizza_orders_api AS
             address_id := p_address_id;
         END IF;
 
-        order_id := order_seq.nextval;
-        INSERT INTO orders (id, price, status, customer_id, address_id) VALUES (order_id, 0, 'CREATED', customer_id, address_id);
+        order_id := orders_seq.nextval;
+        INSERT INTO orders (id, price, status, customer_id, address_id) VALUES (order_id, 1, 'CREATED', customer_id, address_id);
         
         FOR i IN p_items.first..p_items.last LOOP
             INSERT INTO pizza_order (pizza_id, orders_id, amount) VALUES (p_items(i).pizza_id, order_id, p_items(i).amount);
@@ -86,14 +86,32 @@ END;
 
 
 
-
-
 declare
+    address_id number;
+    customer_id number;
+    pocet_pizz number;
+    pocet_pizz_ks number;
     items ORDER_ITEMS := ORDER_ITEMS();
 begin 
-    items.EXTEND(2);
-    items(1) := ITEM_TYP(22 ,1);
-    items(2) := ITEM_TYP(23 ,2);
+
+    select dbms_random.value(1, 6) into pocet_pizz from dual;
+    select dbms_random.value(1, 3000) into address_id from dual;
+    select dbms_random.value(1, 3000) into customer_id from dual;
     
-    PIZZA_ORDERS_API.create_order(null, null, 'Karel', 'Novak', 'karel@seznam.cz', '123456789', '12345', 'Brno', 'Nova 1232', items);
+    items.EXTEND(pocet_pizz);
+
+        FOR x IN (
+            SELECT id
+            FROM pizza pi
+            WHERE rownum <= pocet_pizz
+        ) LOOP
+            select dbms_random.value(1, 10) into pocet_pizz_ks from dual;
+
+            items(pocet_pizz) := ITEM_TYP(x.id ,pocet_pizz_ks);
+        END LOOP;
+
+    items := ORDER_ITEMS();
+
+    
+    PIZZA_ORDERS_API.create_order(customer_id, address_id, null, null, null, null, null, null, null, items);
 end;
