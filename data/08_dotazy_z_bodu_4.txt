@@ -1,0 +1,12 @@
+-- Prodeje pro všechny pizzy(počet prodaných ks a celkový zisk z prodeje pro dané pizzy) za dané období
+SELECT p.name,
+       p.price                  AS "UNIT PRICE",
+       SUM(po.amount)           AS "SALES",
+       SUM(po.amount * p.price) AS "TOTAL PRICE",
+       COUNT(po.pizza_id)       AS "ORDERS AMOUNT"
+FROM pizza p
+JOIN pizza_order po ON p.id = po.pizza_id
+JOIN orders      o  ON po.orders_id = o.id
+WHERE o.created BETWEEN TO_DATE('04/01/2020', 'DD/MM/YYYY') AND TO_DATE('01/02/2020', 'DD/MM/YYYY')
+GROUP BY p.name, p.price;
+

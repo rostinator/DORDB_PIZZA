@@ -1,0 +1,40 @@
+-- Triviální integritní omezení
+
+-- Telefonní číslo zákazníka se musí skládat pouze z číselných znaků
+insert into customer (id, first_name, last_name, email, phone) values (customer_seq.nextval, 'Ahmed', 'Semrad', 'asemrad01@hostgator.com', '12345678A');
+
+-- Cena objednávek a jednotlivých pizz je kladné reálné číslo
+insert into ORDERS (ID, PRICE,STATUS, CUSTOMER_ID, ADDRESS_ID) values (orders_seq.nextval, -150,'COMPLETED','1577','950');
+insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Cranberries', -179.3, '1', 'Extra size');
+
+-- PSČ se skladá pouze z číselných znaků
+insert into ADDRESS(ID, POSTAL_CODE, CITY, STREET) values(address_seq.nextval, 'KAREL', 'Brno', 'Nová 1650');
+
+-- Datum vytvoření objednávky je dřívější než datum aktualizace a předpokádaného doručení
+insert into ORDERS (ID, PRICE, UPDATED, STATUS, CUSTOMER_ID, ADDRESS_ID) values (orders_seq.nextval, 150, to_date('21.04.1990 07:02:46','dd.mm.yyyy hh24:mi:ss'), 'COMPLETED','1577','950');
+insert into ORDERS (ID, PRICE, ESTIMATED_DELIVERY, STATUS, CUSTOMER_ID, ADDRESS_ID) values (orders_seq.nextval, 150, to_date('21.04.1990 07:02:46','dd.mm.yyyy hh24:mi:ss'), 'COMPLETED','1577','950');
+
+-- Datum vytvoření pizzy je dřívější než datum aktualizace
+insert into pizza(id, name, price, active, updated, description) values (pizza_seq.nextval, 'Cranberries', 179.3, '1', to_date('21.04.1990 07:02:46','dd.mm.yyyy hh24:mi:ss'), 'Extra size');
+
+-- Množství jednotlivých položek objednávky je kladné číslo
+insert into PIZZA_ORDER(PIZZA_ID, ORDERS_ID, AMOUNT) values(10, 500, 0);
+
+-- Uživatel s rolí CUSTOMER musí mít přiřazeného zákazníka
+insert into USERZ (id, username, password, role, customer_id) values (user_seq.nextval, 'lwatts0', '51U7Au', 'CUSTOMER', null);
+
+-- Netriviální IO
+
+-- Nelze do pizzy pridat neaktivní ingrediencii
+update ingredient
+set active = '0'
+where id = 10;
+
+insert into PIZZA_INGREDIENT(INGREDIENT_ID, PIZZA_ID) values (10, 10);
+
+-- Nelze vytvořit položku objednávky pokud je pizza neaktivní
+update pizza
+set active = '0'
+where id = 10;
+
+insert into PIZZA_ORDER(PIZZA_ID, ORDERS_ID, AMOUNT) values (10, 10, 2);

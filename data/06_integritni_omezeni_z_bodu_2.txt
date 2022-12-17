@@ -1,14 +1,14 @@
 -- Triviální IO
 
 -- Telefonní číslo zákazníka se musí skládat pouze z číselných znaků
-ALTER TABLE customer ADD CONSTRAINT customer_phone_ck CHECK ( REGEXP_LIKE ( PHONE, '[0-9]' ) );
+ALTER TABLE customer ADD CONSTRAINT customer_phone_ck CHECK(REGEXP_LIKE(PHONE, '^[[:digit:]]+$'));
 
 -- Cena objednávek a jednotlivých pizz je kladné reálné číslo
 ALTER TABLE orders ADD CONSTRAINT orders_price_ck CHECK ( PRICE > 0 );
 ALTER TABLE pizza ADD CONSTRAINT pizza_price_ck CHECK ( PRICE > 0 );
 
 -- PSČ se skladá pouze z číselných znaků
-ALTER TABLE address ADD CONSTRAINT address_postal_code_ck CHECK ( REGEXP_LIKE ( POSTAL_CODE, '[0-9]' ) );
+ALTER TABLE address ADD CONSTRAINT address_postal_code_ck CHECK (REGEXP_LIKE(POSTAL_CODE, '^[[:digit:]]+$'));
 
 -- Datum vytvoření objednávky je dřívější než datum aktualizace a předpokádaného doručení
 ALTER TABLE orders ADD CONSTRAINT orders_date_ck CHECK ( (CREATED < UPDATED AND CREATED < ESTIMATED_DELIVERY) );
@@ -37,7 +37,7 @@ BEGIN
     WHERE i.id = p_ingredient_id;
 
     IF is_active = '0' THEN
-        raise_application_error(-20001, 'Nelze pridat na pizzu neaktivni polozku.');
+        raise_application_error(-20001, 'Nelze pridat na pizzu neaktivni ingredienci.');
     END IF;
 END;
 /

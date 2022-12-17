@@ -1,0 +1,79 @@
+Error starting at line : 6 in command -
+insert into customer (id, first_name, last_name, email, phone) values (customer_seq.nextval, 'Ahmed', 'Semrad', 'asemrad01@hostgator.com', '12345678A')
+Error report -
+ORA-02290: kontrolní omezení (DOORSAGRO1.CUSTOMER_PHONE_CK) porušeno
+
+
+Error starting at line : 9 in command -
+insert into ORDERS (ID, PRICE,STATUS, CUSTOMER_ID, ADDRESS_ID) values (orders_seq.nextval, -150,'COMPLETED','1577','950')
+Error report -
+ORA-02290: kontrolní omezení (DOORSAGRO1.ORDERS_PRICE_CK) porušeno
+
+
+Error starting at line : 10 in command -
+insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Cranberries', -179.3, '1', 'Extra size')
+Error report -
+ORA-02290: kontrolní omezení (DOORSAGRO1.PIZZA_PRICE_CK) porušeno
+
+
+Error starting at line : 13 in command -
+insert into ADDRESS(ID, POSTAL_CODE, CITY, STREET) values(address_seq.nextval, 'KAREL', 'Brno', 'Nová 1650')
+Error report -
+ORA-02290: kontrolní omezení (DOORSAGRO1.ADDRESS_POSTAL_CODE_CK) porušeno
+
+
+Error starting at line : 16 in command -
+insert into ORDERS (ID, PRICE, UPDATED, STATUS, CUSTOMER_ID, ADDRESS_ID) values (orders_seq.nextval, 150, to_date('21.04.1990 07:02:46','dd.mm.yyyy hh24:mi:ss'), 'COMPLETED','1577','950')
+Error report -
+ORA-02290: kontrolní omezení (DOORSAGRO1.ORDERS_DATE_CK) porušeno
+
+
+Error starting at line : 17 in command -
+insert into ORDERS (ID, PRICE, ESTIMATED_DELIVERY, STATUS, CUSTOMER_ID, ADDRESS_ID) values (orders_seq.nextval, 150, to_date('21.04.1990 07:02:46','dd.mm.yyyy hh24:mi:ss'), 'COMPLETED','1577','950')
+Error report -
+ORA-02290: kontrolní omezení (DOORSAGRO1.ORDERS_DATE_CK) porušeno
+
+
+Error starting at line : 20 in command -
+insert into pizza(id, name, price, active, updated, description) values (pizza_seq.nextval, 'Cranberries', 179.3, '1', to_date('21.04.1990 07:02:46','dd.mm.yyyy hh24:mi:ss'), 'Extra size')
+Error report -
+ORA-02290: kontrolní omezení (DOORSAGRO1.PIZZA_DATE_CK) porušeno
+
+
+Error starting at line : 23 in command -
+insert into PIZZA_ORDER(PIZZA_ID, ORDERS_ID, AMOUNT) values(10, 500, 0)
+Error report -
+ORA-20001: Nelze pridat do objednavky neaktivni polozku.
+ORA-06512: na "DOORSAGRO1.CREATE_ORDER_ITEM_CK", line 12
+ORA-06512: na "DOORSAGRO1.CREATE_ORDER_ITEM_TR", line 2
+ORA-04088: chyba během provádění triggeru 'DOORSAGRO1.CREATE_ORDER_ITEM_TR'
+
+
+Error starting at line : 26 in command -
+insert into USERZ (id, username, password, role, customer_id) values (user_seq.nextval, 'lwatts0', '51U7Au', 'CUSTOMER', null)
+Error report -
+ORA-02290: kontrolní omezení (DOORSAGRO1.USER_ROLE_CK) porušeno
+
+
+1 row updated.
+
+
+Error starting at line : 35 in command -
+insert into PIZZA_INGREDIENT(INGREDIENT_ID, PIZZA_ID) values (10, 10)
+Error report -
+ORA-20001: Nelze pridat na pizzu neaktivni ingredienci.
+ORA-06512: na "DOORSAGRO1.PIZZA_INGREDIENT_ACTIVE_CK", line 12
+ORA-06512: na "DOORSAGRO1.PIZZA_INGREDIENT_ACTIVE_TR", line 2
+ORA-04088: chyba během provádění triggeru 'DOORSAGRO1.PIZZA_INGREDIENT_ACTIVE_TR'
+
+
+1 row updated.
+
+
+Error starting at line : 42 in command -
+insert into PIZZA_ORDER(PIZZA_ID, ORDERS_ID, AMOUNT) values (10, 10, 2)
+Error report -
+ORA-20001: Nelze pridat do objednavky neaktivni polozku.
+ORA-06512: na "DOORSAGRO1.CREATE_ORDER_ITEM_CK", line 12
+ORA-06512: na "DOORSAGRO1.CREATE_ORDER_ITEM_TR", line 2
+ORA-04088: chyba během provádění triggeru 'DOORSAGRO1.CREATE_ORDER_ITEM_TR'

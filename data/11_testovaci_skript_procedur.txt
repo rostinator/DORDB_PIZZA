@@ -1,0 +1,66 @@
+-- 1. Create order - nový zákazník + adresa
+declare
+    items ORDER_ITEMS := ORDER_ITEMS();
+begin
+    items.EXTEND(2);
+    items(1) := ITEM_TYP(11, 2);
+    items(2) := ITEM_TYP(12, 1);
+    
+    PIZZA_ORDERS_API.create_order(500, 500, null, null, null, null, null, null, null, items);
+end;
+/
+select * from orders where id = (select MAX(id) from orders);
+/
+-- 
+
+select * from pizza_order where orders_id = (select MAX(id) from orders);
+
+--  kontrola ceny objednavky
+
+SELECT o.price AS "Calculated price",
+       (
+           SELECT SUM(po.amount * p.price)
+           FROM pizza_order po
+           JOIN pizza p ON po.pizza_id = p.id
+           WHERE po.orders_id = o.id
+       )       AS "Expected price"
+FROM orders o
+WHERE o.id = (
+    SELECT MAX(id)
+    FROM orders
+);
+/
+
+
+
+-- 1. Create order - stavající zákazník + adresa
+
+declare
+    items ORDER_ITEMS := ORDER_ITEMS();
+begin
+    items.EXTEND(3);
+    items(1) := ITEM_TYP(11, 1);
+    items(2) := ITEM_TYP(12, 2);
+    items(3) := ITEM_TYP(13, 3);
+    
+    PIZZA_ORDERS_API.create_order(null, null, 'Karel', 'Kořen', 'karel.ko@gmail.com', '123456789', '12345', 'Květy', 'Palackého 62', items);
+end;
+/
+select * from orders o join customer c on o.customer_id = c.id join address a on o.address_id = a.id where o.id = (select MAX(id) from orders);
+/
+select * from pizza_order where orders_id = (select MAX(id) from orders);
+/
+--  kontrola ceny objednavky
+
+SELECT o.price AS "Calculated price",
+       (
+           SELECT SUM(po.amount * p.price)
+           FROM pizza_order po
+           JOIN pizza p ON po.pizza_id = p.id
+           WHERE po.orders_id = o.id
+       )       AS "Expected price"
+FROM orders o
+WHERE o.id = (
+    SELECT MAX(id)
+    FROM orders
+);

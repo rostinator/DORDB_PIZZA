@@ -77,7 +77,8 @@
 
     <h3>2.1. Netriviální integritní omezení</h3>
     <ul>
-      <li>Pokud pizza nemá přiřazenou alespoň jednu aktivní ingredienci nelze jí přepnout do aktivního stavu(nelze jí začít prodávat)</li>
+      <li>Pokud pizza nemá přiřazenou alespoň jednu aktivní ingredienci nelze jí přepnout do aktivního stavu(nelze jí
+        začít prodávat)</li>
       <li>Nelze vytvořit položku objednávky pokud je daná pizza neaktivní</li>
     </ul>
 
@@ -87,7 +88,8 @@
       <strong>Parametry: </strong> customerId, addressId, firstName, lastName, email, phone, postalCode, city, street,
       items.<br>
       <strong>Popis:</strong> procedura vytvoří novou objednávku a sváže jí s adresou a zákazníkem. Dle jednotlivých
-      položek vypočítá celkovou cenu objednávky. Procedura umožňuje vytvoření objednávky pro již existujího zákazníka/adresu nebo vytvoření nového zákazníka/adresy.
+      položek vypočítá celkovou cenu objednávky. Procedura umožňuje vytvoření objednávky pro již existujího
+      zákazníka/adresu nebo vytvoření nového zákazníka/adresy.
     </p>
     <p>
       <strong>Název: </strong>createOrder<br>
@@ -96,7 +98,11 @@
     </p>
 
     <h2>4. Pět slovně formulovaných dotazů nad schématem</h2>
-
+    <ol>
+      <li>Prodeje pro všechny pizzy (počet prodaných ks a celkový zisk z prodeje pro dané pizzy) za dané období</li>
+      <li>Seznam prvních deseti registrovaných zákazníků, kteří nejvíce utratily</li>
+      <li>Seznam zázaníků, kteří provedly objednávku na více než jednu adresu</li>
+    </ol>
 
 
     <h2>5. Skript, který vytvoří databázové schéma odpovídající E-R diagramu</h2>
@@ -105,7 +111,7 @@
     <p><strong>Skript:</strong> <a
         href="./data/06_integritni_omezeni_z_bodu_2.txt">06_integritni_omezeni_z_bodu_2.txt</a></p>
     <h2>7. Skript, který naplní tabulky testovacími daty</h2>
-    <p><strong>Skript:</strong> <a href="./data/07_testovaci_data.txt">07_testovaci_data.txt</a></p> 
+    <p><strong>Skript:</strong> <a href="./data/07_testovaci_data.txt">07_testovaci_data.txt</a></p>
     <h2>8. Skript, který provede postupně všechny navržené dotazy z bodu 4</h2>
     <p><strong>Skript:</strong> <a href="./data/08_dotazy_z_bodu_4.txt">08_dotazy_z_bodu_4.txt</a></p>
     <p><strong>Výsledky:</strong> <a href="./data/08_vysledky_dotazu.txt">08_vysledky_dotazu.txt</a></p>
