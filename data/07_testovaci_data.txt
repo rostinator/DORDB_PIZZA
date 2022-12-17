@@ -8438,26 +8438,26 @@ insert into ingredient(id, name, active) values(ingredient_seq.nextval, 'quiche'
 
 
 
-insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Cranberries', 179.3, '0', 'Extra size');
-insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Pepperoni', 189.20, '0', 'Small size');
-insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Pollo', 189.00, '0', 'Chedar XXL');
-insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'BBQ', 199.00, '0', 'BBQ sugo');
-insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Prosciutto crudo', 189.00, '0', '');
-insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Tabasco', 199.00, '0', 'spicy!');
-insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Sweetchilli', 187.00, '0', '');
-insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Bacorn', 189.00, '0', '');
-insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Jalapeños', 199.00, '0', 'spicy');
-insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Quattro formaggi', 189.00, '0', 'veggie');
-insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Vegetariana', 159.00, '0', 'veggie');
-insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Hawaii', 163.00, '0', '');
-insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Margherita', 199.00, '0', '');
-insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Salami', 187.00, '0', 'Good price');
-insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Mexican', 220.40, '0', '');
-insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Ham with mushrooms', 192.40, '0', '');
-insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Olive', 220.40, '0', '');
-insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Spinach', 189.20, '0', '');
-insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Chicago', 220.40, '0', 'XXL size');
-insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Beef', 250.40, '0', '');
+insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Cranberries', 179.3, '1', 'Extra size');
+insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Pepperoni', 189.20, '1', 'Small size');
+insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Pollo', 189.00, '1', 'Chedar XXL');
+insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'BBQ', 199.00, '1', 'BBQ sugo');
+insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Prosciutto crudo', 189.00, '1', '');
+insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Tabasco', 199.00, '1', 'spicy!');
+insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Sweetchilli', 187.00, '1', '');
+insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Bacorn', 189.00, '1', '');
+insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Jalapeños', 199.00, '1', 'spicy');
+insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Quattro formaggi', 189.00, '1', 'veggie');
+insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Vegetariana', 159.00, '1', 'veggie');
+insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Hawaii', 163.00, '1', '');
+insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Margherita', 199.00, '1', '');
+insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Salami', 187.00, '1', 'Good price');
+insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Mexican', 220.40, '1', '');
+insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Ham with mushrooms', 192.40, '1', '');
+insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Olive', 220.40, '1', '');
+insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Spinach', 189.20, '1', '');
+insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Chicago', 220.40, '1', 'XXL size');
+insert into pizza(id, name, price, active, description) values (pizza_seq.nextval, 'Beef', 250.40, '1', '');
 
 
 
@@ -11174,8 +11174,7 @@ Insert into ORDERS (ID,PRICE,STATUS,CREATED,UPDATED,ESTIMATED_DELIVERY,CUSTOMER_
 Insert into ORDERS (ID,PRICE,STATUS,CREATED,UPDATED,ESTIMATED_DELIVERY,CUSTOMER_ID,ADDRESS_ID) values ('122','717,2','COMPLETED',to_date('27.04.2019 18:09:30','dd.mm.yyyy hh24:mi:ss'),to_date('27.04.2019 22:12:38','dd.mm.yyyy hh24:mi:ss'),to_date('27.04.2019 20:08:52','dd.mm.yyyy hh24:mi:ss'),'2216','169');
 Insert into ORDERS (ID,PRICE,STATUS,CREATED,UPDATED,ESTIMATED_DELIVERY,CUSTOMER_ID,ADDRESS_ID) values ('134','2608','COMPLETED',to_date('10.04.2019 23:30:30','dd.mm.yyyy hh24:mi:ss'),to_date('11.04.2019 01:12:00','dd.mm.yyyy hh24:mi:ss'),to_date('11.04.2019 01:12:19','dd.mm.yyyy hh24:mi:ss'),'7','1585');
 
-
-
+alter SEQUENCE orders_seq increment by 2510;
 
 
 

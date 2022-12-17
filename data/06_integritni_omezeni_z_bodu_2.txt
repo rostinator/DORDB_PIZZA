@@ -19,117 +19,37 @@ ALTER TABLE pizza ADD CONSTRAINT pizza_date_ck CHECK ( CREATED < UPDATED );
 -- Množství jednotlivých položek objednávky je kladné číslo
 ALTER TABLE pizza_order ADD CONSTRAINT pizza_order_amount_ck CHECK ( AMOUNT > 0 );
 
+-- Uživatel s rolí CUSTOMER musí mít přiřazeného zákazníka
+ALTER TABLE userz ADD CONSTRAINT user_role_ck CHECK ( (ROLE = 'CUSTOMER' and CUSTOMER_ID IS NOT NULL) OR (ROLE <> 'CUSTOMER'));
+
 
 -- Netriviální IO
 
--- Každá aktualně nabízená pizza se skládá z alespoň jedné ingredience
-CREATE OR REPLACE FUNCTION calculate_active_ingredients (
-    p_pizza_id pizza_ingredient.pizza_id%TYPE
-) RETURN NUMBER IS
-    active_ingredient_count NUMBER;
-BEGIN
-    SELECT COUNT(*)
-    INTO active_ingredient_count
-    FROM pizza_ingredient pi
-    JOIN ingredient i ON pi.ingredient_id = i.id
-    WHERE i.active = '1'
-          AND pi.pizza_id = p_pizza_id;
-          
-    return active_ingredient_count;
-END;
-/
-CREATE OR REPLACE PROCEDURE check_active_pizza (
-    p_pizza_id   IN INTEGER,
-    p_is_active  IN BOOLEAN,
-    p_was_active IN BOOLEAN
+-- Nelze do pizzy pridat neaktivní ingredienci
+CREATE OR REPLACE PROCEDURE pizza_ingredient_active_ck (
+    p_ingredient_id IN INTEGER
 ) AS
+    is_active ingredient.active%TYPE;
 BEGIN
-    CASE
-        WHEN inserting THEN
-            IF p_is_active THEN
-                raise_application_error(-20002, 'Nelze vytvorit nabizenou pizzu bez ingredienci.');
-            END IF;
-        WHEN updating THEN
-            IF
-                p_is_active
-                AND NOT p_was_active
-            THEN
-                IF calculate_active_ingredients(p_pizza_id) < 1 THEN
-                    raise_application_error(-20003, 'Nelze nabizet pizzu bez ingredienci.');
-                END IF;
+    SELECT i.active
+    INTO is_active
+    FROM ingredient i
+    WHERE i.id = p_ingredient_id;
 
-            END IF;
-    END CASE;
-END;
-/
-CREATE OR REPLACE TRIGGER check_active_pizza_tr BEFORE
-    INSERT OR UPDATE ON pizza
-    FOR EACH ROW
-BEGIN
-   check_active_pizza(:new.id, :new.active = '1', :old.active = '1');
-END;
-/
-CREATE OR REPLACE PROCEDURE check_pizza_ingredient (
-    p_pizza_id IN INTEGER
-) AS
-BEGIN
-    CASE
-        WHEN deleting THEN
-            IF calculate_active_ingredients(p_pizza_id) < 1 THEN
-                UPDATE pizza
-                SET
-                    active = '0'
-                WHERE id = p_pizza_id;
-
-            END IF;
-        WHEN updating THEN
-            raise_application_error(-20005, 'Nelze aktualizovat relaci, vytvorte novou.');
-    END CASE;
-END;
-/
-CREATE OR REPLACE TRIGGER check_pizza_ingredient_tr after
-    DELETE OR UPDATE ON pizza_ingredient
-    FOR EACH ROW
-BEGIN
-    check_pizza_ingredient(:old.pizza_id);
-END;
-/
-CREATE OR REPLACE PROCEDURE check_active_ingredient (
-    p_ingredient_id IN INTEGER,
-    p_is_active     IN BOOLEAN,
-    p_was_active    IN BOOLEAN
-) AS
-BEGIN
-    IF
-        p_is_active
-        AND NOT p_was_active
-    THEN
-        FOR x IN (
-            SELECT pizza_id
-            FROM pizza_ingredient pi
-            WHERE pi.ingredient_id = p_ingredient_id
-        ) LOOP
-            IF calculate_active_ingredients(x.pizza_id) <= 1 THEN
-                UPDATE pizza
-                SET
-                    active = '0'
-                WHERE id = x.pizza_id;
-
-            END IF;
-        END LOOP;
-
+    IF is_active = '0' THEN
+        raise_application_error(-20001, 'Nelze pridat na pizzu neaktivni polozku.');
     END IF;
 END;
 /
-CREATE OR REPLACE TRIGGER check_active_ingredient_tr BEFORE
-    UPDATE ON ingredient
+-- Nelze vytvořit položku objednávky pokud je pizza neaktivní
+CREATE OR REPLACE TRIGGER pizza_ingredient_active_tr BEFORE
+    INSERT OR UPDATE ON pizza_ingredient
     FOR EACH ROW
 BEGIN
-    check_active_ingredient(:new.id, :new.active = '1', :old.active = '1');
+    pizza_ingredient_active_ck(:new.ingredient_id);
 END;
 /
--- Nelze vytvořit položku objednávky pokud je pizza neaktivní
-CREATE OR REPLACE PROCEDURE create_order_item (
+CREATE OR REPLACE PROCEDURE create_order_item_ck (
     p_pizza_id IN INTEGER
 ) AS
     is_active pizza.active%TYPE;
@@ -140,13 +60,13 @@ BEGIN
     WHERE p.id = p_pizza_id;
 
     IF is_active = '0' THEN
-        raise_application_error(-20001, 'Nelze pridat do objednavky neaktivní polozku.');
+        raise_application_error(-20001, 'Nelze pridat do objednavky neaktivni polozku.');
     END IF;
 END;
 /
 CREATE OR REPLACE TRIGGER create_order_item_tr BEFORE
-    INSERT ON pizza_order
+    INSERT OR UPDATE ON pizza_order
     FOR EACH ROW
 BEGIN
-    create_order_item(:new.pizza_id);
+    create_order_item_ck(:new.pizza_id);
 END;
