@@ -1,4 +1,4 @@
--- 1. Create order - nový zákazník + adresa
+-- 1. Create order - stávající zákazník + adresa
 declare
     items ORDER_ITEMS := ORDER_ITEMS();
 begin
@@ -11,10 +11,8 @@ end;
 /
 select * from orders where id = (select MAX(id) from orders);
 /
--- 
-
 select * from pizza_order where orders_id = (select MAX(id) from orders);
-
+/
 --  kontrola ceny objednavky
 
 SELECT o.price AS "Calculated price",
@@ -31,9 +29,7 @@ WHERE o.id = (
 );
 /
 
-
-
--- 1. Create order - stavající zákazník + adresa
+-- 1. Create order - nový zákazník + adresa
 
 declare
     items ORDER_ITEMS := ORDER_ITEMS();
@@ -64,3 +60,33 @@ WHERE o.id = (
     SELECT MAX(id)
     FROM orders
 );
+
+
+-- 2. Register customer - stavajici zakaznik
+
+begin
+    PIZZA_ORDERS_API.register_customer('uzivatelKarel', 'HesloHeslo', 'Lynda', 'Cafferty', 'lcaffertyrq@google.ca', '123456789');
+end;
+/
+select * from userz u join customer c on u.customer_id = c.id where u.id = (select MAX(id) from userz);
+/
+select (select MAX(id) from customer) as "Last created customer", customer_id as "User karel123 customer ID" from userz where id = (select MAX(id) from userz);
+
+
+-- 2. Register customer - novy zakaznik
+
+begin
+    PIZZA_ORDERS_API.register_customer('novyZakaznik123546', 'HesloHeslo', 'Karel', 'Novak', 'ahoj123@google.ca', '987654321');
+end;
+/
+select * from userz u join customer c on u.customer_id = c.id where u.id = (select MAX(id) from userz);
+/
+select (select MAX(id) from customer) as "Last created customer", customer_id as "User karel123 novyZakaznik ID" from userz where id = (select MAX(id) from userz);
+
+-- 2. Register customer - novy zakaznik bez username. Nastavi se email
+/
+begin
+    PIZZA_ORDERS_API.register_customer(null, 'HesloHeslo', 'Jirka', 'Nový', 'usernameem222aissl@google.ca', '987654321');
+end;
+/
+select * from userz u join customer c on u.customer_id = c.id where u.id = (select MAX(id) from userz);

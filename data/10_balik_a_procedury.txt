@@ -4,16 +4,25 @@ create or replace type order_items as table of item_typ;
 
 CREATE OR REPLACE PACKAGE pizza_orders_api AS
     PROCEDURE create_order (
-        p_customer_id INTEGER,
-        p_address_id  INTEGER,
-        p_first_name  customer.first_name%TYPE,
-        p_last_name   customer.last_name%TYPE,
-        p_email       customer.email%TYPE,
-        p_phone       customer.phone%TYPE,
-        p_postal_code address.postal_code%TYPE,
-        p_city        address.city%TYPE,
-        p_street      address.street%TYPE,
+        p_customer_id IN INTEGER,
+        p_address_id  IN INTEGER,
+        p_first_name  IN customer.first_name%TYPE,
+        p_last_name   IN customer.last_name%TYPE,
+        p_email       IN customer.email%TYPE,
+        p_phone       IN customer.phone%TYPE,
+        p_postal_code IN address.postal_code%TYPE,
+        p_city        IN address.city%TYPE,
+        p_street      IN address.street%TYPE,
         p_items       IN order_items
+    );
+
+    PROCEDURE register_customer (
+        p_username   IN userz.username%TYPE,
+        p_password   IN userz.password%TYPE,
+        p_first_name IN customer.first_name%TYPE,
+        p_last_name  IN customer.last_name%TYPE,
+        p_email      IN customer.email%TYPE,
+        p_phone      IN customer.phone%TYPE
     );
     
     function calculate_order_price(order_id integer) return number;
@@ -64,6 +73,53 @@ CREATE OR REPLACE PACKAGE BODY pizza_orders_api AS
         where id = order_id;
         
     END;
+
+    PROCEDURE register_customer(
+        p_username   IN userz.username%TYPE,
+        p_password   IN userz.password%TYPE,
+        p_first_name IN customer.first_name%TYPE,
+        p_last_name  IN customer.last_name%TYPE,
+        p_email      IN customer.email%TYPE,
+        p_phone      IN customer.phone%TYPE
+    ) IS
+        final_username userz.username%TYPE;
+        customer_id INTEGER;
+        customer_record INTEGER;
+        password_hash VARCHAR2(255);
+        old_phone customer.phone%TYPE;
+    BEGIN
+        IF (p_username IS NULL OR LENGTH(p_username) < 1) THEN
+            IF (p_email IS NULL OR LENGTH(p_email) > 50) THEN
+                raise_application_error(-20011, 'Nelze zaregistrovat uzivatele - chybne prihlasovaci jmeno');
+            END IF;
+            final_username := p_email;
+        ELSE
+            final_username := p_username;
+        END IF;
+        
+        IF (p_password IS NULL OR LENGTH(p_password) < 8) THEN
+            raise_application_error(-20011, 'Nelze zaregistrovat uzivatele - neplatné heslo');
+        END IF;
+        
+        select count(*) into customer_record from customer where first_name = p_first_name and last_name = p_last_name and email = p_email;
+        
+        IF customer_record > 0 THEN
+            select id, phone into customer_id, old_phone from customer where email = p_email;
+        ELSE
+            customer_id := customer_seq.nextval;
+            old_phone := p_phone;
+            INSERT INTO customer (id, first_name, last_name, email, phone) VALUES (customer_id, p_first_name, p_last_name, p_email, p_phone);
+        END IF;
+        
+        IF old_phone <> p_phone THEN
+            update customer
+            set phone = p_phone
+            where email = p_email;
+        END IF;
+        
+        insert into userz (id, username, password, role, customer_id) VALUES (user_seq.nextval, final_username, p_password, 'CUSTOMER', customer_id);
+        
+    END;
     
     FUNCTION calculate_order_price(order_id INTEGER) RETURN NUMBER
     IS
@@ -82,36 +138,3 @@ CREATE OR REPLACE PACKAGE BODY pizza_orders_api AS
     END;
 
 END;
-
-
-
-
-declare
-    address_id number;
-    customer_id number;
-    pocet_pizz number;
-    pocet_pizz_ks number;
-    items ORDER_ITEMS := ORDER_ITEMS();
-begin 
-
-    select dbms_random.value(1, 6) into pocet_pizz from dual;
-    select dbms_random.value(1, 3000) into address_id from dual;
-    select dbms_random.value(1, 3000) into customer_id from dual;
-    
-    items.EXTEND(pocet_pizz);
-
-        FOR x IN (
-            SELECT id
-            FROM pizza pi
-            WHERE rownum <= pocet_pizz
-        ) LOOP
-            select dbms_random.value(1, 10) into pocet_pizz_ks from dual;
-
-            items(pocet_pizz) := ITEM_TYP(x.id ,pocet_pizz_ks);
-        END LOOP;
-
-    items := ORDER_ITEMS();
-
-    
-    PIZZA_ORDERS_API.create_order(customer_id, address_id, null, null, null, null, null, null, null, items);
-end;

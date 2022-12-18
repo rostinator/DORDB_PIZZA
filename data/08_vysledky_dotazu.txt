@@ -1,0 +1,212 @@
+-- Prodeje pro všechny pizzy(počet prodaných ks a celkový zisk z prodeje pro dané pizzy)
+
+NAME                                                  UNIT PRICE      SALES TOTAL PRICE ORDERS AMOUNT
+----------------------------------------------------- ---------- ---------- ----------- -------------
+Ham with mushrooms                                         192,4       1044    200865,6           434
+Cranberries                                                179,3       4054    726882,2          1002
+Pollo                                                        189       2818      532602           696
+Vegetariana                                                  159        372       59148           157
+Olive                                                      220,4        980      215992           401
+Bacorn                                                       189       1112      210168           457
+Prosciutto crudo                                             189       1161      219429           289
+Hawaii                                                       163        167       27221            70
+Spinach                                                    189,2       1021    193173,2           397
+Chicago                                                    220,4       1090      240236           443
+Jalape?os                                                    199        881      175319           352
+Sweetchilli                                                  187       1247      233189           500
+Beef                                                       250,4       1266    317006,4           500
+Tabasco                                                      199        451       89749           106
+Margherita                                                   199       1287      256113           503
+Salami                                                       187       1139      212993           451
+Pepperoni                                                  189,2       3618    684525,6           895
+Quattro formaggi                                             189        621      117369           253
+BBQ                                                          199       1956      389244           484
+Mexican                                                    220,4       1044    230097,6           412
+
+20 rows selected.
+
+
+Plan hash value: 2624129582
+ 
+------------------------------------------------------------------------------------------------
+| Id  | Operation                     | Name           | Rows  | Bytes | Cost (%CPU)| Time     |
+------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT              |                |   142 |  3408 |   225   (1)| 00:00:03 |
+|   1 |  HASH GROUP BY                |                |   142 |  3408 |   225   (1)| 00:00:03 |
+|   2 |   NESTED LOOPS                |                |       |       |            |          |
+|   3 |    NESTED LOOPS               |                |  8775 |   205K|   223   (0)| 00:00:03 |
+|   4 |     TABLE ACCESS FULL         | PIZZA          |    20 |   360 |     3   (0)| 00:00:01 |
+|*  5 |     INDEX RANGE SCAN          | PIZZA_ORDER_PK |   439 |       |     3   (0)| 00:00:01 |
+|   6 |    TABLE ACCESS BY INDEX ROWID| PIZZA_ORDER    |   439 |  2634 |    11   (0)| 00:00:01 |
+------------------------------------------------------------------------------------------------
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+ 
+   5 - access("P"."ID"="PO"."PIZZA_ID")
+
+
+
+-- Seznam prvních deseti registrovaných zákazníků, kteří objednali nejvíce pizz za daný rok(2020)
+
+
+FIRST_NAME                                         LAST_NAME                                          Number of orders Total amount
+-------------------------------------------------- -------------------------------------------------- ---------------- ------------
+Verile                                             Stoade                                                            6      27406,2
+Marijn                                             Uzielli                                                           6      26572,8
+Christoffer                                        Timeby                                                           10        25286
+Charlotte                                          Ormes                                                             5        24682
+Ethelda                                            O'Brollachain                                                     6      21607,2
+Austin                                             McNelis                                                           6      20793,6
+Ruddy                                              Cescon                                                            6        20682
+Allx                                               Cessford                                                          5        20653
+Averyl                                             Finlry                                                            6      20468,4
+Gawain                                             Paulat                                                            6        19248
+
+10 rows selected.
+
+Plan hash value: 321242488
+ 
+-----------------------------------------------------------------------------------------------------
+| Id  | Operation                          | Name           | Rows  | Bytes | Cost (%CPU)| Time     |
+-----------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT                   |                |    10 |   800 |    49   (9)| 00:00:01 |
+|*  1 |  COUNT STOPKEY                     |                |       |       |            |          |
+|   2 |   VIEW                             |                |   368 | 29440 |    49   (9)| 00:00:01 |
+|*  3 |    SORT ORDER BY STOPKEY           |                |   368 | 17296 |    49   (9)| 00:00:01 |
+|   4 |     HASH GROUP BY                  |                |   368 | 17296 |    49   (9)| 00:00:01 |
+|   5 |      NESTED LOOPS                  |                |   368 | 17296 |    47   (5)| 00:00:01 |
+|*  6 |       HASH JOIN                    |                |  2610 |   114K|    47   (5)| 00:00:01 |
+|   7 |        MERGE JOIN                  |                |  2610 | 65250 |    35   (3)| 00:00:01 |
+|*  8 |         TABLE ACCESS BY INDEX ROWID| ORDERS         |   744 | 15624 |    22   (0)| 00:00:01 |
+|   9 |          INDEX FULL SCAN           | ORDERS_PK      |  2502 |       |     8   (0)| 00:00:01 |
+|* 10 |         SORT JOIN                  |                |  8775 | 35100 |    13   (8)| 00:00:01 |
+|  11 |          INDEX FAST FULL SCAN      | PIZZA_ORDER_PK |  8775 | 35100 |    12   (0)| 00:00:01 |
+|  12 |        TABLE ACCESS FULL           | CUSTOMER       |  3000 | 60000 |    11   (0)| 00:00:01 |
+|* 13 |       INDEX UNIQUE SCAN            | USERZ__IDX     |     1 |     2 |     0   (0)| 00:00:01 |
+-----------------------------------------------------------------------------------------------------
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+ 
+   1 - filter(ROWNUM<=10)
+   3 - filter(ROWNUM<=10)
+   6 - access("C"."ID"="O"."CUSTOMER_ID")
+   8 - filter("O"."CREATED"<=TO_DATE(' 2020-12-31 00:00:00', 'syyyy-mm-dd hh24:mi:ss') AND 
+              "O"."CREATED">=TO_DATE(' 2020-01-01 00:00:00', 'syyyy-mm-dd hh24:mi:ss'))
+  10 - access("O"."ID"="P"."ORDERS_ID")
+       filter("O"."ID"="P"."ORDERS_ID")
+  13 - access("C"."ID"="U"."CUSTOMER_ID")
+       filter("U"."CUSTOMER_ID" IS NOT NULL)
+
+
+-- Seznam všech měst, ve kterých neregistrovaní zákaznící provedly alespoň jednu objednávku obsahující čtyřikrát nejdažší pizzu z nabídky
+
+
+CITY
+------------------------------
+Niort
+Nangaroro
+?ub?h
+Nevers
+Além
+Tianjiazhuang
+Lewotola
+Pehuajó
+Aizhai
+Nankang
+T’aebaek
+Cabo de Vila
+Kokemäki
+Matalam
+Jimeta
+Buluh Kasap
+Nangen
+Wuda
+Sapucaia
+Teroual
+Turbiv
+Callahuanca
+Yanjiang
+Aguelmous
+Lunik
+Pincher Creek
+Ph?ng
+Amirabad
+Villavicencio
+Rybinsk
+Jaru
+Xinye
+Zhanlong
+Az Zarbah
+Dýšina
+Karang Tengah
+Shangzhang
+Dadukou
+Akkol’
+Sucun
+Payao
+Cabatang
+Dailekh
+Basel
+Richmond
+Madette
+Hengdong Chengguanzhen
+Biscoitos
+Oslo
+Honoria
+Lagunillas
+Hamilton
+Cendagah
+Xiaojiang
+Boketu
+San Mateo
+Pakuranga
+Santo Domingo
+Pacarkeling
+Al Jarr???
+Angren
+Diourbel
+Gab?s
+Shiree
+Karangnongko
+Vis
+Dobřív
+Mund?o
+Golub-Dobrzyń
+
+69 rows selected.
+
+
+Plan hash value: 4044878357
+ 
+--------------------------------------------------------------------------------------------------
+| Id  | Operation                       | Name           | Rows  | Bytes | Cost (%CPU)| Time     |
+--------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT                |                |    56 |  2688 |   177   (2)| 00:00:03 |
+|   1 |  HASH UNIQUE                    |                |    56 |  2688 |   177   (2)| 00:00:03 |
+|*  2 |   HASH JOIN                     |                |    56 |  2688 |   172   (1)| 00:00:03 |
+|   3 |    NESTED LOOPS ANTI            |                |    56 |  1904 |   162   (0)| 00:00:02 |
+|   4 |     NESTED LOOPS                |                |    75 |  2400 |   162   (0)| 00:00:02 |
+|*  5 |      TABLE ACCESS BY INDEX ROWID| PIZZA_ORDER    |    75 |   750 |    12   (0)| 00:00:01 |
+|*  6 |       INDEX RANGE SCAN          | PIZZA_ORDER_PK |   439 |       |     4   (0)| 00:00:01 |
+|*  7 |        COUNT STOPKEY            |                |       |       |            |          |
+|   8 |         VIEW                    |                |    20 |   260 |     4  (25)| 00:00:01 |
+|*  9 |          SORT ORDER BY STOPKEY  |                |    20 |   160 |     4  (25)| 00:00:01 |
+|  10 |           TABLE ACCESS FULL     | PIZZA          |    20 |   160 |     3   (0)| 00:00:01 |
+|* 11 |      TABLE ACCESS BY INDEX ROWID| ORDERS         |     1 |    22 |     2   (0)| 00:00:01 |
+|* 12 |       INDEX UNIQUE SCAN         | ORDERS_PK      |     1 |       |     1   (0)| 00:00:01 |
+|* 13 |     INDEX UNIQUE SCAN           | USERZ__IDX     |   109 |   218 |     0   (0)| 00:00:01 |
+|  14 |    TABLE ACCESS FULL            | ADDRESS        |  3000 | 42000 |     9   (0)| 00:00:01 |
+--------------------------------------------------------------------------------------------------
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+ 
+   2 - access("A"."ID"="O"."ADDRESS_ID")
+   5 - filter("PO"."AMOUNT"=4)
+   6 - access("PO"."PIZZA_ID"= (SELECT "from$_subquery$_006"."ID" FROM  (SELECT "ID" "ID" 
+              FROM "PIZZA" "PIZZA" ORDER BY "PRICE" DESC) "from$_subquery$_006" WHERE ROWNUM<=1))
+   7 - filter(ROWNUM<=1)
+   9 - filter(ROWNUM<=1)
+  11 - filter("O"."STATUS"='COMPLETED')

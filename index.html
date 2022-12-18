@@ -92,16 +92,20 @@
       zákazníka/adresu nebo vytvoření nového zákazníka/adresy.
     </p>
     <p>
-      <strong>Název: </strong>createOrder<br>
-      <strong>Parametry: </strong> <br>
-      <strong>Popis: </strong>
+      <strong>Název: </strong>registerCustomer<br>
+      <strong>Parametry: </strong>username, password, firstName, lastName, email, phone <br>
+      <strong>Popis: </strong>procedura zaregistruje zákazníka. Vytvoří mu uživatelský účet a následně jej sváže se
+      zákazníkem. Pokud se již data o zákazníkovy nachází v DB dojde pouze k vytvoření uživatelského účtu.
     </p>
 
     <h2>4. Pět slovně formulovaných dotazů nad schématem</h2>
     <ol>
       <li>Prodeje pro všechny pizzy (počet prodaných ks a celkový zisk z prodeje pro dané pizzy) za dané období</li>
       <li>Seznam prvních deseti registrovaných zákazníků, kteří nejvíce utratily</li>
-      <li>Seznam zázaníků, kteří provedly objednávku na více než jednu adresu</li>
+      <li>Seznam všech měst, ve kterých neregistrovaní zákaznící provedly alespoň jednu objednávku obsahující čtyřikrát
+        nejdažší pizzu z nabídky</li>
+      <li>Seznam registrovaných zákazníků, kteří provedly zrušení objednávky nebo nikdy neprovedly objednávku</li>
+      <li>Neprodávanější ingredience na pizzu</li>
     </ol>
 
 
@@ -125,7 +129,9 @@
     <p><strong>Skript:</strong> <a href="./data/11_testovaci_skript_procedur.txt">11_testovaci_skript_procedur.txt</a>
     </p>
     <p><strong>Výstupy:</strong> <a href="./data/11_vystup.txt">11_vystup.txt</a></p>
-    <h2>12. Skript, který doplní do tabulky automaticky dopočítávaný sloupec</h2>
+
+
+    <!--  <h2>12. Skript, který doplní do tabulky automaticky dopočítávaný sloupec</h2>
     <p><strong>Skript:</strong> <a href="./data/12_odvozene_hodnoty.txt">12_odvozene_hodnoty.txt</a></p>
     <h2>13. Skript, který vytvoří úložiště ještě jednou v „objektové“ podobě</h2>
     <p><strong>Skript:</strong> <a href="./data/13_objektova_podoba.txt">13_objektova_podoba.txt</a></p>
@@ -133,13 +139,14 @@
     <p><strong>Skript:</strong> <a href="./data/14_objektove_dotazy_z_bodu_4.txt">14_objektove_dotazy_z_bodu_4.txt</a>
     </p>
     <p><strong>Výstup:</strong> <a href="./data/14_vystup.txt">14_vystup.txt</a></p>
-    <h2>15. Navrhněte slovně fakta a dimenze pro datový sklad</h2>
+    <h2>15. Navrhněte slovně fakta a dimenze pro datový sklad</h2>-->
 
 
 
 
     <h2 style="margin-top: 50px;">Skript pro vyčištění databáze</h2>
-    <p style="margin-bottom: 10px; padding-bottom: 15px;"><strong>Skript:</strong> <a href="16_drop.txt">drop.txt</a>
+    <p style="margin-bottom: 10px; padding-bottom: 15px;"><strong>Skript:</strong> <a
+        href="./data/17_drop.txt">drop.txt</a>
     </p>
   </div>
 </body>

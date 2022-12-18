@@ -1,0 +1,84 @@
+-- 1. Create order - stávající zákazník + adresa
+
+PL/SQL procedure successfully completed.
+
+
+        ID      PRICE STATUS                                             CREATED  UPDATED  ESTIMATE CUSTOMER_ID ADDRESS_ID
+---------- ---------- -------------------------------------------------- -------- -------- -------- ----------- ----------
+      3643        481 CREATED                                            18.12.22                           500        500
+
+-- Položky objednávky
+
+  PIZZA_ID  ORDERS_ID     AMOUNT
+---------- ---------- ----------
+        11       3643          2
+        12       3643          1
+
+-- Celková cena
+
+Calculated price Expected price
+---------------- --------------
+             481            481
+
+
+-- 1. Create order - nový zákazník + adresa
+
+PL/SQL procedure successfully completed.
+
+
+        ID      PRICE STATUS       CREATED  UPDATED  ESTIMATE CUSTOMER_ID ADDRESS_ID         ID FIRST_NAME       LAST_NAME      EMAIL                         PHONE             ID POSTA CITY          STREET
+---------- ---------- ------------ -------- -------- -------- ----------- ---------- ---------- ---------------- -------------- ---------------------------- --------- ---------- ----- -------------- -----------------------
+      3644       1082 CREATED      18.12.22                          3043       3021       3043 Karel            Kořen          karel.kosek@gmail.com        123456789       3021 12345 Květy          Palackého 62
+
+
+-- Položky objednávky
+
+  PIZZA_ID  ORDERS_ID     AMOUNT
+---------- ---------- ----------
+        11       3644          1
+        12       3644          2
+        13       3644          3
+
+-- Celková cena
+
+Calculated price Expected price
+---------------- --------------
+            1082           1082
+
+
+-- 2. Register customer - stavajici zakaznik
+
+PL/SQL procedure successfully completed.
+
+
+        ID USERNAME         PASSWORD             ROLE                     CUSTOMER_ID         ID FIRST_NAME                  LAST_NAME                  EMAIL                                        PHONE
+---------- ---------------- -------------------- ------------------------ ----------- ---------- --------------------------- -------------------------- -------------------------------------------- ---------
+      5074 uzivatelKarel    HesloHeslo           CUSTOMER                        2999       2999 Lynda                       Cafferty                   lcaffertyrq@google.ca                        123456789
+
+
+Last created customer User karel123 customer ID
+--------------------- -------------------------
+                 3043                      2999
+
+-- 2. Register customer - novy zakaznik
+
+PL/SQL procedure successfully completed.
+
+
+        ID USERNAME                  PASSWORD                      ROLE             CUSTOMER_ID         ID FIRST_NAME          LAST_NAME        EMAIL                                                 PHONE
+---------- ------------------------- ----------------------------- ---------------- ----------- ---------- ------------------- ---------------- ----------------------------------------------------- ---------
+      5075 novyZakaznik123546        HesloHeslo                    CUSTOMER                3055       3055 Karel               Novak            ahoj123@google.ca                                     987654321
+
+
+Last created customer User karel123 novyZakaznik ID
+--------------------- -----------------------------
+                 3055                          3055
+
+-- 2. Register customer - novy zakaznik bez username. Nastavi se email
+
+PL/SQL procedure successfully completed.
+
+
+        ID USERNAME                               PASSWORD         ROLE              CUSTOMER_ID         ID FIRST_NAME          LAST_NAME     EMAIL                                                   PHONE
+---------- -------------------------------------- ---------------- ----------------- ----------- ---------- ------------------- ------------- ------------------------------------------------------- ---------
+      5076 usernameem222aissl@google.ca           HesloHeslo       CUSTOMER                 3056       3056 Jirka               Nový          usernameem222aissl@google.ca                            987654321

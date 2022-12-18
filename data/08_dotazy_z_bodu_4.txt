@@ -1,4 +1,5 @@
--- Prodeje pro všechny pizzy(počet prodaných ks a celkový zisk z prodeje pro dané pizzy) za dané období
+-- Prodeje pro všechny pizzy(počet prodaných ks a celkový zisk z prodeje pro dané pizzy)
+
 SELECT p.name,
        p.price                  AS "UNIT PRICE",
        SUM(po.amount)           AS "SALES",
@@ -7,6 +8,62 @@ SELECT p.name,
 FROM pizza p
 JOIN pizza_order po ON p.id = po.pizza_id
 JOIN orders      o  ON po.orders_id = o.id
-WHERE o.created BETWEEN TO_DATE('04/01/2020', 'DD/MM/YYYY') AND TO_DATE('01/02/2020', 'DD/MM/YYYY')
 GROUP BY p.name, p.price;
 
+-- Seznam prvních deseti registrovaných zákazníků, kteří objednali nejvíce pizz za daný rok(2020)
+
+SELECT *
+FROM (
+    SELECT c.first_name,
+           c.last_name,
+           COUNT(o.id) AS "Number of orders",
+           SUM(o.price) AS "Total amount"
+    FROM customer c
+    INNER JOIN userz       u ON c.id = u.customer_id
+    JOIN orders            o ON c.id = o.customer_id
+    JOIN pizza_order       p ON o.id = p.orders_id
+    WHERE o.created BETWEEN TO_DATE('01/01/2020', 'DD/MM/YYYY') AND TO_DATE('31/12/2020', 'DD/MM/YYYY')
+    GROUP BY c.id,
+             c.first_name,
+             c.last_name
+    ORDER BY SUM(o.price) DESC
+)
+WHERE ROWNUM <= 10;
+
+-- Seznam všech měst, ve kterých neregistrovaní zákaznící provedly alespoň jednu objednávku obsahující čtyřikrát nejdažší pizzu z nabídky
+
+SELECT DISTINCT a.city
+FROM address a
+JOIN orders      o ON a.id = o.address_id
+JOIN pizza_order po ON o.id = po.orders_id
+WHERE po.pizza_id = (SELECT *
+        FROM (
+            SELECT id
+            FROM pizza
+            ORDER BY price DESC
+        )
+        WHERE ROWNUM <= 1)
+    AND o.customer_id NOT IN (
+        SELECT u.customer_id
+        FROM userz u
+        WHERE u.customer_id IS NOT NULL)
+    AND o.status = 'COMPLETED'
+    AND po.amount = 4;
+
+
+
+SELECT distinct c.first_name,
+       c.last_name
+FROM customer c
+INNER JOIN orders o ON c.id = o.customer_id
+WHERE o.status = 'CANCELED' or 
+MINUS
+SELECT c.first_name,
+       c.last_name
+FROM customer c
+LEFT JOIN userz    u ON c.id = u.customer_id
+WHERE u.customer_id IS NULL;
+
+
+
+ALTER SESSION SET nls_date_format='yyyy-mm-dd hh24:mi:ss';
