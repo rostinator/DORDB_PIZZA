@@ -1,0 +1,398 @@
+-- Dotaz č. 4
+-- Seznam uživatelů, kteří si objednaly stejnou pizzu jako jiný konkrétní uživatel a jejich příjmení začíná stejným písmenem
+-- A - varianta s MINUS - cost 1622
+-- B - druha varianta   - cost 1604
+  
+-- 4.A
+
+FIRST_NAME                                         LAST_NAME                                         
+-------------------------------------------------- --------------------------------------------------
+Annmaria                                           Munton                                            
+Ara                                                Mears                                             
+Ario                                               Miall                                             
+Ashley                                             McMeekin                                          
+Aubree                                             Mealiffe                                          
+Averil                                             McQuilliam                                        
+Banky                                              Muckersie                                         
+Berke                                              Murley                                            
+Bride                                              Martyn                                            
+Brodie                                             Mancktelow                                        
+Carlye                                             Marfell                                           
+Carmelina                                          McGaugan                                          
+Casandra                                           Matashkin                                         
+Cherri                                             Maddicks                                          
+Christy                                            McGuigan                                          
+Cord                                               Monkton                                           
+Cristine                                           Moreton                                           
+Cullin                                             Maudlin                                           
+Cybil                                              Mager                                             
+Cyndy                                              Marr                                              
+Cyrus                                              McCloud                                           
+Darrin                                             MacIlory                                          
+Denys                                              McMoyer                                           
+Dexter                                             MacQuist                                          
+Dillon                                             Murrie                                            
+Domini                                             Mallows                                           
+Elisha                                             Monget                                            
+Erin                                               Maddinon                                          
+Estell                                             Mycroft                                           
+Gale                                               McCuffie                                          
+Garold                                             McCheyne                                          
+Gilemette                                          MattiCCI                                          
+Gilligan                                           Moyer                                             
+Hall                                               Mayger                                            
+Harold                                             Mapledoore                                        
+Janetta                                            McGannon                                          
+Jarrad                                             Mapes                                             
+Jaye                                               Mattek                                            
+Joana                                              Mergue                                            
+Jodie                                              MacGregor                                         
+June                                               Madsen                                            
+Keary                                              Molines                                           
+Keen                                               McCue                                             
+Kimberlee                                          Marmion                                           
+Kimmy                                              MacGlory                                          
+Kylynn                                             Meads                                             
+Leonidas                                           Maruska                                           
+Lorry                                              MacKean                                           
+Lucio                                              McGlade                                           
+Lynnea                                             McCowen                                           
+Marybeth                                           Monkton                                           
+Maurits                                            McVeagh                                           
+Melamie                                            McClure                                           
+Menard                                             McBay                                             
+Merrielle                                          Muckloe                                           
+Merry                                              Marchiso                                          
+Muffin                                             Moye                                              
+Murial                                             McKenzie                                          
+Orella                                             Moehle                                            
+Padraig                                            Marchello                                         
+Paula                                              McGiff                                            
+Peggi                                              Mapp                                              
+Renado                                             Moses                                             
+Roanne                                             McGing                                            
+Rochette                                           Mantrup                                           
+Shayne                                             Mourant                                           
+Shermie                                            Mattia                                            
+Silvain                                            Mountford                                         
+Sybyl                                              Malsher                                           
+Trisha                                             Moubray                                           
+Yank                                               Moult                                             
+
+71 rows selected. 
+
+Plan hash value: 2531947172
+ 
+-----------------------------------------------------------------------------------------------------
+| Id  | Operation                          | Name           | Rows  | Bytes | Cost (%CPU)| Time     |
+-----------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT                   |                |  2859 |   239K|  1622   (2)| 00:00:20 |
+|   1 |  MINUS                             |                |       |       |            |          |
+|   2 |   SORT UNIQUE                      |                |  2859 |   139K|  1601   (1)| 00:00:20 |
+|*  3 |    HASH JOIN                       |                |  2859 |   139K|  1598   (1)| 00:00:20 |
+|   4 |     TABLE ACCESS FULL              | CUSTOMER       |  3000 | 60000 |    11   (0)| 00:00:01 |
+|*  5 |     HASH JOIN                      |                |  2859 | 85770 |  1586   (1)| 00:00:20 |
+|   6 |      TABLE ACCESS FULL             | ORDERS         |  2502 | 20016 |  1537   (1)| 00:00:19 |
+|*  7 |      HASH JOIN                     |                |  2859 | 62898 |    48   (5)| 00:00:01 |
+|   8 |       MERGE JOIN                   |                |     5 |    75 |    35   (3)| 00:00:01 |
+|*  9 |        TABLE ACCESS BY INDEX ROWID | ORDERS         |     1 |     8 |    22   (0)| 00:00:01 |
+|  10 |         INDEX FULL SCAN            | ORDERS_PK      |  2502 |       |     8   (0)| 00:00:01 |
+|  11 |         TABLE ACCESS BY INDEX ROWID| USERZ          |     1 |    14 |     2   (0)| 00:00:01 |
+|* 12 |          INDEX UNIQUE SCAN         | USERZ2__IDX    |     1 |       |     1   (0)| 00:00:01 |
+|* 13 |        SORT JOIN                   |                |  8775 | 61425 |    13   (8)| 00:00:01 |
+|  14 |         INDEX FAST FULL SCAN       | PIZZA_ORDER_PK |  8775 | 61425 |    12   (0)| 00:00:01 |
+|  15 |       INDEX FAST FULL SCAN         | PIZZA_ORDER_PK |  8775 | 61425 |    12   (0)| 00:00:01 |
+|  16 |   SORT UNIQUE                      |                |  3000 |    99K|    22  (10)| 00:00:01 |
+|* 17 |    FILTER                          |                |       |       |            |          |
+|* 18 |     HASH JOIN RIGHT OUTER          |                |  3000 |    99K|    21   (5)| 00:00:01 |
+|* 19 |      TABLE ACCESS FULL             | USERZ          |   422 |  5908 |     9   (0)| 00:00:01 |
+|  20 |      TABLE ACCESS FULL             | CUSTOMER       |  3000 | 60000 |    11   (0)| 00:00:01 |
+|  21 |     NESTED LOOPS                   |                |     1 |    27 |     3   (0)| 00:00:01 |
+|* 22 |      TABLE ACCESS BY INDEX ROWID   | USERZ          |     1 |    14 |     2   (0)| 00:00:01 |
+|* 23 |       INDEX UNIQUE SCAN            | USERZ2__IDX    |     1 |       |     1   (0)| 00:00:01 |
+|  24 |      TABLE ACCESS BY INDEX ROWID   | CUSTOMER       |  3000 | 39000 |     1   (0)| 00:00:01 |
+|* 25 |       INDEX UNIQUE SCAN            | CUSTOMER_PK    |     1 |       |     0   (0)| 00:00:01 |
+-----------------------------------------------------------------------------------------------------
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+ 
+   3 - access("C"."ID"="O1"."CUSTOMER_ID")
+   5 - access("O1"."ID"="PO1"."ORDERS_ID")
+   7 - access("PO1"."PIZZA_ID"="PO2"."PIZZA_ID")
+   9 - filter("O2"."CUSTOMER_ID"= (SELECT "U"."CUSTOMER_ID" FROM "USERZ" "U" WHERE 
+              "USERNAME"='mgannonke'))
+  12 - access("USERNAME"='mgannonke')
+  13 - access("PO2"."ORDERS_ID"="O2"."ID")
+       filter("PO2"."ORDERS_ID"="O2"."ID")
+  17 - filter("U"."USERNAME"='mgannonke' OR SUBSTR("C1"."LAST_NAME",1,1)<> (SELECT 
+              SUBSTR("C2"."LAST_NAME",1,1) FROM "USERZ" "U2","CUSTOMER" "C2" WHERE 
+              "C2"."ID"="U2"."CUSTOMER_ID" AND "U2"."USERNAME"='mgannonke' AND "U2"."CUSTOMER_ID" IS NOT 
+              NULL))
+  18 - access("U"."CUSTOMER_ID"(+)="C1"."ID")
+  19 - filter("U"."CUSTOMER_ID"(+) IS NOT NULL)
+  22 - filter("U2"."CUSTOMER_ID" IS NOT NULL)
+  23 - access("U2"."USERNAME"='mgannonke')
+  25 - access("C2"."ID"="U2"."CUSTOMER_ID")
+
+-- 4.B
+
+FIRST_NAME                                         LAST_NAME                                         
+-------------------------------------------------- --------------------------------------------------
+Annmaria                                           Munton                                            
+Ara                                                Mears                                             
+Ario                                               Miall                                             
+Ashley                                             McMeekin                                          
+Aubree                                             Mealiffe                                          
+Averil                                             McQuilliam                                        
+Banky                                              Muckersie                                         
+Berke                                              Murley                                            
+Bride                                              Martyn                                            
+Brodie                                             Mancktelow                                        
+Carlye                                             Marfell                                           
+Carmelina                                          McGaugan                                          
+Casandra                                           Matashkin                                         
+Cherri                                             Maddicks                                          
+Christy                                            McGuigan                                          
+Cord                                               Monkton                                           
+Cristine                                           Moreton                                           
+Cullin                                             Maudlin                                           
+Cybil                                              Mager                                             
+Cyndy                                              Marr                                              
+Cyrus                                              McCloud                                           
+Darrin                                             MacIlory                                          
+Denys                                              McMoyer                                           
+Dexter                                             MacQuist                                          
+Dillon                                             Murrie                                            
+Domini                                             Mallows                                           
+Elisha                                             Monget                                            
+Erin                                               Maddinon                                          
+Estell                                             Mycroft                                           
+Gale                                               McCuffie                                          
+Garold                                             McCheyne                                          
+Gilemette                                          MattiCCI                                          
+Gilligan                                           Moyer                                             
+Hall                                               Mayger                                            
+Harold                                             Mapledoore                                        
+Janetta                                            McGannon                                          
+Jarrad                                             Mapes                                             
+Jaye                                               Mattek                                            
+Joana                                              Mergue                                            
+Jodie                                              MacGregor                                         
+June                                               Madsen                                            
+Keary                                              Molines                                           
+Keen                                               McCue                                             
+Kimberlee                                          Marmion                                           
+Kimmy                                              MacGlory                                          
+Kylynn                                             Meads                                             
+Leonidas                                           Maruska                                           
+Lorry                                              MacKean                                           
+Lucio                                              McGlade                                           
+Lynnea                                             McCowen                                           
+Marybeth                                           Monkton                                           
+Maurits                                            McVeagh                                           
+Melamie                                            McClure                                           
+Menard                                             McBay                                             
+Merrielle                                          Muckloe                                           
+Merry                                              Marchiso                                          
+Muffin                                             Moye                                              
+Murial                                             McKenzie                                          
+Orella                                             Moehle                                            
+Padraig                                            Marchello                                         
+Paula                                              McGiff                                            
+Peggi                                              Mapp                                              
+Renado                                             Moses                                             
+Roanne                                             McGing                                            
+Rochette                                           Mantrup                                           
+Shayne                                             Mourant                                           
+Shermie                                            Mattia                                            
+Silvain                                            Mountford                                         
+Sybyl                                              Malsher                                           
+Trisha                                             Moubray                                           
+Yank                                               Moult                                             
+
+71 rows selected. 
+
+
+Plan hash value: 125996677
+ 
+-----------------------------------------------------------------------------------------------------
+| Id  | Operation                          | Name           | Rows  | Bytes | Cost (%CPU)| Time     |
+-----------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT                   |                |    30 |   720 |  1604   (1)| 00:00:20 |
+|   1 |  SORT ORDER BY                     |                |    30 |   720 |  1604   (1)| 00:00:20 |
+|*  2 |   HASH JOIN SEMI                   |                |    30 |   720 |  1600   (1)| 00:00:20 |
+|*  3 |    TABLE ACCESS FULL               | CUSTOMER       |    30 |   600 |    11   (0)| 00:00:01 |
+|   4 |     NESTED LOOPS                   |                |     1 |    27 |     3   (0)| 00:00:01 |
+|*  5 |      TABLE ACCESS BY INDEX ROWID   | USERZ          |     1 |    14 |     2   (0)| 00:00:01 |
+|*  6 |       INDEX UNIQUE SCAN            | USERZ2__IDX    |     1 |       |     1   (0)| 00:00:01 |
+|   7 |      TABLE ACCESS BY INDEX ROWID   | CUSTOMER       |  3000 | 39000 |     1   (0)| 00:00:01 |
+|*  8 |       INDEX UNIQUE SCAN            | CUSTOMER_PK    |     1 |       |     0   (0)| 00:00:01 |
+|   9 |    VIEW                            | VW_NSO_1       |  2858 | 11432 |  1588   (1)| 00:00:20 |
+|* 10 |     HASH JOIN                      |                |  2858 | 85740 |  1586   (1)| 00:00:20 |
+|  11 |      TABLE ACCESS FULL             | ORDERS         |  2502 | 20016 |  1537   (1)| 00:00:19 |
+|* 12 |      HASH JOIN                     |                |  2859 | 62898 |    48   (5)| 00:00:01 |
+|  13 |       MERGE JOIN                   |                |     5 |    75 |    35   (3)| 00:00:01 |
+|* 14 |        TABLE ACCESS BY INDEX ROWID | ORDERS         |     1 |     8 |    22   (0)| 00:00:01 |
+|  15 |         INDEX FULL SCAN            | ORDERS_PK      |  2502 |       |     8   (0)| 00:00:01 |
+|  16 |         TABLE ACCESS BY INDEX ROWID| USERZ          |     1 |    14 |     2   (0)| 00:00:01 |
+|* 17 |          INDEX UNIQUE SCAN         | USERZ2__IDX    |     1 |       |     1   (0)| 00:00:01 |
+|* 18 |        SORT JOIN                   |                |  8775 | 61425 |    13   (8)| 00:00:01 |
+|  19 |         INDEX FAST FULL SCAN       | PIZZA_ORDER_PK |  8775 | 61425 |    12   (0)| 00:00:01 |
+|  20 |       INDEX FAST FULL SCAN         | PIZZA_ORDER_PK |  8775 | 61425 |    12   (0)| 00:00:01 |
+-----------------------------------------------------------------------------------------------------
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+ 
+   2 - access("C1"."ID"="ID")
+   3 - filter(SUBSTR("C1"."LAST_NAME",1,1)= (SELECT SUBSTR("C2"."LAST_NAME",1,1) FROM 
+              "USERZ" "U2","CUSTOMER" "C2" WHERE "C2"."ID"="U2"."CUSTOMER_ID" AND 
+              "U2"."USERNAME"='mgannonke' AND "U2"."CUSTOMER_ID" IS NOT NULL))
+   5 - filter("U2"."CUSTOMER_ID" IS NOT NULL)
+   6 - access("U2"."USERNAME"='mgannonke')
+   8 - access("C2"."ID"="U2"."CUSTOMER_ID")
+  10 - access("O1"."ID"="PO1"."ORDERS_ID")
+       filter("O1"."ID"<>"O2"."ID")
+  12 - access("PO1"."PIZZA_ID"="PO2"."PIZZA_ID")
+  14 - filter("O2"."CUSTOMER_ID"= (SELECT "U"."CUSTOMER_ID" FROM "USERZ" "U" WHERE 
+              "USERNAME"='mgannonke'))
+  17 - access("USERNAME"='mgannonke')
+  18 - access("PO2"."ORDERS_ID"="O2"."ID")
+       filter("PO2"."ORDERS_ID"="O2"."ID")
+
+
+-- Seznam registrovaných zákazníků, kteří provedly zrušení objednávky nebo čekají na doručení objednávky
+-- A - INTERSECT            - cost 1563
+-- B - JOIN tabulka userz   - cost 1550
+
+-- 5.A
+
+FIRST_NAME                                         LAST_NAME                                         
+-------------------------------------------------- --------------------------------------------------
+Adrian                                             Nannini                                           
+Aldin                                              Bradder                                           
+Alejandro                                          Dye                                               
+Ashleigh                                           Hansley                                           
+Audra                                              Clery                                             
+Averyl                                             Finlry                                            
+Bryon                                              Ackers                                            
+Charil                                             Syson                                             
+Christoffer                                        Timeby                                            
+Colver                                             Batstone                                          
+Crissy                                             Barcroft                                          
+Cy                                                 Lawey                                             
+Dall                                               Brave                                             
+Elena                                              Isoldi                                            
+Emmit                                              Zellmer                                           
+Eva                                                Sayre                                             
+Eve                                                Manderson                                         
+Gaven                                              Pietrowski                                        
+Jinny                                              Ayrton                                            
+Kelsy                                              Evetts                                            
+Korrie                                             Summerhayes                                       
+Kristien                                           Rastrick                                          
+Mariam                                             Vibert                                            
+Melamie                                            Tremontana                                        
+Merridie                                           Haggerwood                                        
+Neda                                               Ryott                                             
+Nevile                                             Keenlayside                                       
+Nichol                                             Pember                                            
+Orland                                             Capon                                             
+Ruben                                              Bolin                                             
+Sandye                                             Dockreay                                          
+Tamara                                             Fear                                              
+Wittie                                             Kmietsch                                          
+
+33 rows selected. 
+
+Plan hash value: 2067123985
+ 
+-------------------------------------------------------------------------------------
+| Id  | Operation              | Name       | Rows  | Bytes | Cost (%CPU)| Time     |
+-------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT       |            |   285 | 15390 |  1563   (1)| 00:00:19 |
+|   1 |  SORT ORDER BY         |            |   285 | 15390 |  1563   (1)| 00:00:19 |
+|   2 |   VIEW                 |            |   285 | 15390 |  1562   (1)| 00:00:19 |
+|   3 |    INTERSECTION        |            |       |       |            |          |
+|   4 |     SORT UNIQUE        |            |   285 |  9690 |  1550   (1)| 00:00:19 |
+|*  5 |      HASH JOIN         |            |   285 |  9690 |  1549   (1)| 00:00:19 |
+|*  6 |       TABLE ACCESS FULL| ORDERS     |   285 |  3990 |  1537   (1)| 00:00:19 |
+|   7 |       TABLE ACCESS FULL| CUSTOMER   |  3000 | 60000 |    11   (0)| 00:00:01 |
+|   8 |     SORT UNIQUE        |            |   422 |  9284 |    12   (9)| 00:00:01 |
+|   9 |      NESTED LOOPS      |            |   422 |  9284 |    11   (0)| 00:00:01 |
+|  10 |       TABLE ACCESS FULL| CUSTOMER   |  3000 | 60000 |    11   (0)| 00:00:01 |
+|* 11 |       INDEX UNIQUE SCAN| USERZ__IDX |     1 |     2 |     0   (0)| 00:00:01 |
+-------------------------------------------------------------------------------------
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+   5 - access("C"."ID"="O"."CUSTOMER_ID")
+   6 - filter("O"."STATUS"='CANCELED' OR "O"."STATUS"='CONFIRMED' OR 
+              "O"."STATUS"='CREATED')
+  11 - access("C"."ID"="CUSTOMER_ID")
+       filter("CUSTOMER_ID" IS NOT NULL)
+
+
+-- 5.B
+
+FIRST_NAME                                         LAST_NAME                                         
+-------------------------------------------------- --------------------------------------------------
+Aldin                                              Bradder                                           
+Alejandro                                          Dye                                               
+Eva                                                Sayre                                             
+Neda                                               Ryott                                             
+Mariam                                             Vibert                                            
+Jinny                                              Ayrton                                            
+Sandye                                             Dockreay                                          
+Christoffer                                        Timeby                                            
+Dall                                               Brave                                             
+Korrie                                             Summerhayes                                       
+Bryon                                              Ackers                                            
+Gaven                                              Pietrowski                                        
+Audra                                              Clery                                             
+Nevile                                             Keenlayside                                       
+Orland                                             Capon                                             
+Nichol                                             Pember                                            
+Emmit                                              Zellmer                                           
+Charil                                             Syson                                             
+Colver                                             Batstone                                          
+Cy                                                 Lawey                                             
+Kristien                                           Rastrick                                          
+Wittie                                             Kmietsch                                          
+Eve                                                Manderson                                         
+Merridie                                           Haggerwood                                        
+Averyl                                             Finlry                                            
+Tamara                                             Fear                                              
+Ashleigh                                           Hansley                                           
+Crissy                                             Barcroft                                          
+Adrian                                             Nannini                                           
+Kelsy                                              Evetts                                            
+Melamie                                            Tremontana                                        
+Ruben                                              Bolin                                             
+Elena                                              Isoldi                                            
+
+33 rows selected. 
+
+Plan hash value: 2755085697
+ 
+-----------------------------------------------------------------------------------
+| Id  | Operation            | Name       | Rows  | Bytes | Cost (%CPU)| Time     |
+-----------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT     |            |    40 |  1440 |  1550   (1)| 00:00:19 |
+|   1 |  HASH UNIQUE         |            |    40 |  1440 |  1550   (1)| 00:00:19 |
+|   2 |   NESTED LOOPS       |            |    40 |  1440 |  1549   (1)| 00:00:19 |
+|*  3 |    HASH JOIN         |            |   285 |  9690 |  1549   (1)| 00:00:19 |
+|*  4 |     TABLE ACCESS FULL| ORDERS     |   285 |  3990 |  1537   (1)| 00:00:19 |
+|   5 |     TABLE ACCESS FULL| CUSTOMER   |  3000 | 60000 |    11   (0)| 00:00:01 |
+|*  6 |    INDEX UNIQUE SCAN | USERZ__IDX |     1 |     2 |     0   (0)| 00:00:01 |
+-----------------------------------------------------------------------------------
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+ 
+   3 - access("C"."ID"="O"."CUSTOMER_ID")
+   4 - filter("O"."STATUS"='CANCELED' OR "O"."STATUS"='CONFIRMED' OR 
+              "O"."STATUS"='CREATED')
+   6 - access("C"."ID"="U"."CUSTOMER_ID")
+       filter("U"."CUSTOMER_ID" IS NOT NULL)

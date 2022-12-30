@@ -1,4 +1,4 @@
--- Prodeje pro všechny pizzy(počet prodaných ks a celkový zisk z prodeje pro dané pizzy)
+-- Prodeje pro všechny pizzy(počet prodaných ks a celkový zisk z prodeje pro dané pizzy) - pomoci vnorenych dotazu
 
 SELECT p.name,
        p.price                  AS "UNIT PRICE",
@@ -10,7 +10,7 @@ JOIN pizza_order po ON p.id = po.pizza_id
 JOIN orders      o  ON po.orders_id = o.id
 GROUP BY p.name, p.price;
 
--- Seznam prvních deseti registrovaných zákazníků, kteří objednali nejvíce pizz za daný rok(2020)
+-- Seznam prvních deseti registrovaných zákazníků, kteří objednali nejvíce pizz za daný rok (2020)
 
 SELECT *
 FROM (
@@ -19,7 +19,7 @@ FROM (
            COUNT(o.id) AS "Number of orders",
            SUM(o.price) AS "Total amount"
     FROM customer c
-    INNER JOIN userz       u ON c.id = u.customer_id
+    JOIN userz             u ON c.id = u.customer_id
     JOIN orders            o ON c.id = o.customer_id
     JOIN pizza_order       p ON o.id = p.orders_id
     WHERE o.created BETWEEN TO_DATE('01/01/2020', 'DD/MM/YYYY') AND TO_DATE('31/12/2020', 'DD/MM/YYYY')
@@ -50,20 +50,102 @@ WHERE po.pizza_id = (SELECT *
     AND o.status = 'COMPLETED'
     AND po.amount = 4;
 
-
-
-SELECT distinct c.first_name,
-       c.last_name
+-- Seznam uživatelů, kteří si objednaly stejnou pizzu jako jiný konkrétní uživatel a jejich příjmení začíná stejným písmenem - pomoci mnozinove operace minus
+-- 4.A
+SELECT first_name,
+       last_name
 FROM customer c
-INNER JOIN orders o ON c.id = o.customer_id
-WHERE o.status = 'CANCELED' or 
+JOIN orders o1 ON c.id = o1.customer_id
+WHERE o1.id IN (
+    SELECT po1.orders_id
+    FROM pizza_order po1
+    WHERE po1.pizza_id IN (
+        SELECT po2.pizza_id
+        FROM pizza_order po2
+        JOIN orders o2 ON po2.orders_id = o2.id
+        WHERE o2.customer_id = (
+            SELECT u.customer_id
+            FROM userz u
+            WHERE username = 'mgannonke'
+        )
+    )
+)
 MINUS
-SELECT c.first_name,
-       c.last_name
-FROM customer c
-LEFT JOIN userz    u ON c.id = u.customer_id
-WHERE u.customer_id IS NULL;
+SELECT first_name,
+       last_name
+FROM customer c1
+LEFT JOIN userz    u ON u.customer_id = c1.id
+WHERE u.username = 'mgannonke'
+      OR substr(c1.last_name, 1, 1) <> (
+    SELECT substr(c2.last_name, 1, 1)
+    FROM customer c2
+    JOIN userz u2 ON c2.id = u2.customer_id
+    WHERE u2.username = 'mgannonke'
+);
 
+-- 4.B
+
+SELECT first_name,
+       last_name
+FROM customer c1
+LEFT JOIN userz    u ON u.customer_id = c1.id
+WHERE substr(c1.last_name, 1, 1) = (
+        SELECT substr(c2.last_name, 1, 1)
+        FROM customer c2
+        JOIN userz u2 ON c2.id = u2.customer_id
+        WHERE u2.username = 'mgannonke'
+    )
+      AND c1.id IN (
+    SELECT c2.id
+    FROM customer c2
+    JOIN orders o1 ON c2.id = o1.customer_id
+    WHERE o1.id IN (
+        SELECT po1.orders_id
+        FROM pizza_order po1
+        WHERE po1.pizza_id IN (
+            SELECT po2.pizza_id
+            FROM pizza_order po2
+            JOIN orders o2 ON po2.orders_id = o2.id
+            WHERE o2.customer_id = (
+                    SELECT u.customer_id
+                    FROM userz u
+                    WHERE username = 'mgannonke'
+                )
+                  AND o1.id <> o2.id
+        )
+    )
+);
+
+-- Seznam registrovaných zákazníků, kteří provedly zrušení objednávky nebo čekají na doručení objednávky
+-- 5.A
+
+SELECT *
+FROM (
+    SELECT c.first_name,
+           c.last_name
+    FROM customer c
+    JOIN orders o ON c.id = o.customer_id
+    WHERE o.status IN ( 'CANCELED', 'CREATED', 'CONFIRMED' )
+    INTERSECT
+    SELECT c.first_name,
+           c.last_name
+    FROM customer c
+    WHERE c.id = ANY (
+        SELECT customer_id
+        FROM userz
+    )
+)
+ORDER BY first_name;
+
+-- 5.B
+
+SELECT DISTINCT c.first_name,
+                c.last_name
+FROM customer c
+JOIN orders o ON c.id = o.customer_id
+JOIN userz  u ON c.id = u.customer_id
+WHERE o.status IN ( 'CANCELED', 'CREATED', 'CONFIRMED' )
+ORDER BY c.first_name;
 
 
 ALTER SESSION SET nls_date_format='yyyy-mm-dd hh24:mi:ss';
