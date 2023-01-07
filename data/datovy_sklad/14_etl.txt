@@ -1,0 +1,72 @@
+INSERT INTO dim_status (
+    id,
+    name
+)
+    SELECT
+        id,
+        status
+    FROM
+        orders;
+
+INSERT INTO dim_address (
+      id,
+      postal_code,
+      city,
+      street
+)
+    SELECT
+    	id,
+    	postal_code,
+    	city,
+    	street
+    FROM
+        address;
+
+INSERT INTO dim_customer (
+    id,
+    first_name,
+    last_name,
+    email,
+    phone
+)
+    SELECT
+        id,
+        first_name,
+    	  last_name,
+    	  email,
+    	  phone
+    FROM
+        customer;
+
+INSERT INTO dim_date (
+    id,
+    day,
+    month,
+    year
+)
+    SELECT
+        id,
+        EXTRACT(day FROM created),
+        EXTRACT(month FROM created),
+        EXTRACT(year FROM created)
+
+    FROM
+        orders;
+
+INSERT INTO fact_orders (
+    id,
+    price,
+    dim_address_id,
+    dim_status_id,
+    dim_date_id,
+    dim_customer_id
+)
+    SELECT
+        id,
+        price,
+        address_id,
+        id,
+        id,
+        customer_id
+    FROM
+        orders;

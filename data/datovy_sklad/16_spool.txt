@@ -1,0 +1,128 @@
+
+NAME                                                     YEAR POCET_OBJEDNAVEK CELKOVA_CENA
+-------------------------------------------------- ---------- ---------------- ------------
+CANCELED                                                 2019               34        21945
+COMPLETED                                                2019             1444      3162589
+CONFIRMED                                                2019              108       238530
+                                                         2019             1586      3423064
+CANCELED                                                 2020               18        11791
+COMPLETED                                                2020              602      1291429
+CONFIRMED                                                2020               63       135473
+                                                         2020              683      1438693
+CANCELED                                                 2021                4         3091
+COMPLETED                                                2021              173       349723
+CONFIRMED                                                2021               28        57567
+
+NAME                                                     YEAR POCET_OBJEDNAVEK CELKOVA_CENA
+-------------------------------------------------- ---------- ---------------- ------------
+                                                         2021              205       410381
+CREATED                                                  2022               12         7575
+CANCELED                                                 2022                2          796
+COMPLETED                                                2022               20        38169
+CONFIRMED                                                2022                6        12681
+                                                         2022               40        59221
+                                                                          2514      5331359
+
+18 rows selected. 
+
+
+CITY                                                     YEAR POCET_OBJEDNAVEK CELKOVA_CENA
+-------------------------------------------------- ---------- ---------------- ------------
+Kazo                                                     2019                3         3278
+Lyon                                                     2019                5         6869
+Assis                                                    2019                3         5288
+N?ca                                                     2019                3         7975
+Aizhai                                                   2019                3         8580
+Allada                                                   2019                3         7559
+Anping                                                   2019                3         4721
+Baocun                                                   2019                3         5321
+Handan                                                   2019                3         4905
+Huiwen                                                   2019                4         6718
+Igunga                                                   2019                3         8598
+
+CITY                                                     YEAR POCET_OBJEDNAVEK CELKOVA_CENA
+-------------------------------------------------- ---------- ---------------- ------------
+Murzuq                                                   2019                3         6406
+Skulsk                                                   2019                3         9072
+Sonlit                                                   2019                3         7582
+Wysoka                                                   2019                3        11994
+Briceni                                                  2019                3         5887
+Kvänum                                                   2019                3         4976
+Luofang                                                  2019                3         5031
+Mafinga                                                  2019                3         6730
+Mijiang                                                  2019                3         6364
+Morrito                                                  2019                4        12583
+Tabanan                                                  2019                3         7079
+
+CITY                                                     YEAR POCET_OBJEDNAVEK CELKOVA_CENA
+-------------------------------------------------- ---------- ---------------- ------------
+Xiaochi                                                  2019                3         7798
+Zhishan                                                  2019                3         6142
+Ampanihy                                                 2019                4         5923
+Bolszewo                                                 2019                4         7150
+Cikulina                                                 2019                3         5905
+Columbus                                                 2019                3         7807
+Louveira                                                 2019                3         7865
+Lushnjë                                                  2019                4         7863
+Roermond                                                 2019                3         5799
+Sapucaia                                                 2019                3        11199
+Zhouwang                                                 2019                3         5795
+
+CITY                                                     YEAR POCET_OBJEDNAVEK CELKOVA_CENA
+-------------------------------------------------- ---------- ---------------- ------------
+?ub?h                                                    2019                4         7153
+Antequera                                                2019                3         9080
+Binuangan                                                2019                3         5855
+Chuncheng                                                2019                3         2589
+Göteborg                                                 2019                5        12397
+Jadranovo                                                2019                4         6743
+Milwaukee                                                2019                3         9052
+Sam Phran                                                2019                4         8559
+San Mateo                                                2019                4         8916
+San Pedro                                                2019                3         5261
+Si Narong                                                2019                3         9368
+
+CITY                                                     YEAR POCET_OBJEDNAVEK CELKOVA_CENA
+-------------------------------------------------- ---------- ---------------- ------------
+Sillamäe                                                 2019                3         9576
+Sinamaica                                                2019                3         5189
+Sitabamba                                                2019                3         7818
+Stockholm                                                2019                5        11859
+Balengbeng                                               2019                3         7862
+Chapadinha                                               2019                3         8082
+K?benhavn                                                2019                3         7006
+San Benito                                               2019                4         3811
+San Fabian                                               2019                3         6424
+Tursunzoda                                               2019                4         6153
+B?o L?c                                                  2019                4         7640
+
+CITY                                                     YEAR POCET_OBJEDNAVEK CELKOVA_CENA
+-------------------------------------------------- ---------- ---------------- ------------
+Gununggoong                                              2019                4        12422
+San Antonio                                              2019                3         5758
+Tbilisskaya                                              2019                3         6935
+?kersberga                                               2019                4        10170
+Novyy Nekouz                                             2019                4         9231
+Selianítika                                              2019                3         5086
+Munka-Ljungby                                            2019                3         6724
+N’dalatando                                              2019                4         7587
+Villavicencio                                            2019                3         9104
+Krasnokumskoye                                           2019                4         4799
+Emiliano Zapata                                          2019                3         3409
+
+CITY                                                     YEAR POCET_OBJEDNAVEK CELKOVA_CENA
+-------------------------------------------------- ---------- ---------------- ------------
+                                                         2019             1586      3423064
+Sovetsk                                                  2020                3         4809
+Baguinge                                                 2020                3        10050
+K?benhavn                                                2020                3         4436
+                                                         2020              683      1438693
+Serra D'El Rei                                           2021                3         7464
+                                                         2021              205       410381
+Kvìty                                                    2022                3         3246
+Mogzon                                                   2022                9         4329
+                                                         2022               40        59221
+                                                                          2514      5331359
+
+77 rows selected. 
+
